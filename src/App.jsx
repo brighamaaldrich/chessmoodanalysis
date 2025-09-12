@@ -3,8 +3,7 @@ import { useCallback, useState } from "react";
 import Chessboard from "./components/Chessboard";
 import GhostPiece from "./components/GhostPiece";
 import MoveTree from "./components/MoveTree";
-import PgnUploader from "./components/PgnUploader";
-import { MoveNode, parsePGN } from "./utils/pgnParser";
+import { parsePGN } from "./utils/pgnParser";
 
 const App = () => {
 	const [game, setGame] = useState(new Chess());
