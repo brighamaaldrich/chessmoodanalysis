@@ -6,6 +6,7 @@ import MoveTree from "./components/MoveTree";
 import { parsePGN } from "./utils/pgnParser";
 
 const App = () => {
+	const [flipped, setFlipped] = useState(false);
 	const [game, setGame] = useState(new Chess());
 	const [dragged, setDragged] = useState(null);
 	const [boardKey, setBoardKey] = useState(0);
@@ -78,6 +79,8 @@ const App = () => {
 					moveTree={moveTree}
 					currentNode={currentNode}
 					onMoveSelect={handleMoveSelect}
+					flipped={flipped}
+					setFlipped={setFlipped}
 				/>
 			</div>
 			<div className="h-screen md:h-screen w-full md:w-1/3 flex flex-col items-center inset-shadow-panel md:mt-0 overflow-scroll p-8">

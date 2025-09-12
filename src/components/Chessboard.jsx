@@ -15,6 +15,8 @@ const Chessboard = ({
 	moveTree,
 	currentNode,
 	onMoveSelect,
+	flipped,
+	setFlipped,
 }) => {
 	const [selected, setSelected] = useState("");
 	const [valid, setValid] = useState([]);
@@ -25,7 +27,6 @@ const Chessboard = ({
 	const [checkSquare, setCheckSquare] = useState(null);
 	const [hasLeft, setHasLeft] = useState(false);
 	const [clickCount, setClickCount] = useState(0);
-	const [flipped, setFlipped] = useState(false);
 
 	const toAlgebraic = (row, col) => {
 		const file = String.fromCharCode("a".charCodeAt(0) + col);
