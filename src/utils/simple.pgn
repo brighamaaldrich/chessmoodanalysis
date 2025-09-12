@@ -1,0 +1,15 @@
+[Event "Brigham's Repertoire: Center Fork Trick"]
+[Result "*"]
+[Variant "Standard"]
+[ECO "C55"]
+[Opening "Italian Game: Two Knights Defense"]
+[StudyName "Brigham's Repertoire"]
+[ChapterName "Center Fork Trick"]
+[ChapterURL "https://lichess.org/study/GJCyuOwx/C9KkbWhK"]
+[Annotator "https://lichess.org/@/brigham"]
+[UTCDate "2022.01.15"]
+[UTCTime "05:15:51"]
+
+1. d4 d5 2. c4 e6 (2... dxc4 3. e4 (3. Nc3 Nf6) 3... e6) (2... c6 3. Nc3 Nf6) 3. cxd5 exd5 *
+
+
