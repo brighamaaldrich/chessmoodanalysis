@@ -69,7 +69,6 @@ const Chessboard = ({
 				game.turn()
 			);
 			if (children.length == 0) {
-				console.log("test");
 				children.push(newNode);
 			} else {
 				children.splice(currentNode.mainIdx + 1, 0, newNode);
@@ -134,7 +133,11 @@ const Chessboard = ({
 
 	const handleMouseDown = useCallback(
 		(e) => {
-			e.preventDefault();
+			// Only prevent default if clicking on the chessboard
+			const boardElement = document.getElementById("board");
+			if (boardElement && boardElement.contains(e.target)) {
+				e.preventDefault();
+			}
 			setHasLeft(false);
 			const square = getSquare(e);
 			if (!square) return null;

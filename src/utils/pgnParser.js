@@ -1,14 +1,7 @@
 import { Chess } from "chess.js";
 
 export class MoveNode {
-	constructor(
-		move = null,
-		lan = null,
-		parent = null,
-		moveNumber = null,
-		fen = null,
-		turn = null
-	) {
+	constructor(move, lan, parent, moveNumber, fen, turn) {
 		this.move = move;
 		this.lan = lan;
 		this.parent = parent;
@@ -32,6 +25,7 @@ export class MoveNode {
 
 function tokenize(pgn) {
 	pgn = pgn.replace(/\[.*?\]\s*/gs, " ");
+	pgn = pgn.replace(/\{.*?\}\s*/gs, " ");
 	let regex = /\(|\)|\d+\.\.\.|\d+\.|[^\s()]+/g;
 	return pgn.match(regex) || [];
 }
@@ -73,9 +67,20 @@ function parseMoves(
 	return parent;
 }
 
-export function parsePGN(pgn) {
+function parseSinglePGN(pgn) {
 	let tokens = tokenize(pgn);
 	let game = new Chess();
 	let tree = parseMoves(tokens, game);
 	return tree;
+}
+
+export function parsePGN(pgn) {
+	let pgnParts = pgn.split("\n\n");
+	if (pgnParts[pgnParts.length - 1].trim() === "") pgnParts.pop();
+	let trees = [];
+	for (let i = 0; i < pgnParts.length - 1; i += 2) {
+		pgn = pgnParts.slice(i, i + 2).join("\n\n");
+		trees.push(parseSinglePGN(pgn));
+	}
+	return trees;
 }

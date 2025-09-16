@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import Chessboard from "./components/Chessboard";
 import GhostPiece from "./components/GhostPiece";
 import MoveTree from "./components/MoveTree";
-import { parsePGN } from "./utils/pgnParser";
+import { MoveNode, parsePGN } from "./utils/pgnParser";
 
 const App = () => {
 	const [flipped, setFlipped] = useState(false);
@@ -12,19 +12,27 @@ const App = () => {
 	const [boardKey, setBoardKey] = useState(0);
 	const [treeKey, setTreeKey] = useState(0);
 	const [theme, setTheme] = useState("lichess");
-	const [moveTree, setMoveTree] = useState(null);
-	const [currentNode, setCurrentNode] = useState(null);
+	const [moveTrees, setMoveTrees] = useState([
+		new MoveNode("start", null, null, null, game.fen(), game.turn()),
+	]);
+	const [treeIdx, setTreeIdx] = useState(0);
+	const [currentNode, setCurrentNode] = useState(moveTrees[treeIdx]);
 
 	const updateGame = (newGame) => {
 		setGame(newGame);
 		setTreeKey((prev) => prev + 1);
 	};
 
+	const changeTreeIdx = (i) => {
+		setTreeIdx(i);
+		handleMoveSelect(moveTrees[i]);
+	};
+
 	const handlePgnLoad = useCallback((pgnContent) => {
 		try {
-			const tree = parsePGN(pgnContent);
-			setMoveTree(tree);
-			setCurrentNode(tree);
+			const trees = parsePGN(pgnContent);
+			setMoveTrees(trees);
+			setCurrentNode(trees);
 			const newGame = new Chess();
 			setGame(newGame);
 			setBoardKey((prev) => prev + 1);
@@ -45,12 +53,12 @@ const App = () => {
 
 	const handleTreeNavigate = useCallback(
 		(direction) => {
-			if (!currentNode || !moveTree) return;
+			if (!currentNode || !moveTrees[treeIdx]) return;
 			let targetNode = null;
 			if (direction === "start") {
-				targetNode = moveTree;
+				targetNode = moveTrees[treeIdx];
 			} else if (direction === "end") {
-				let current = moveTree;
+				let current = moveTrees[treeIdx];
 				while (current.children.length > 0) {
 					current = current.children[0];
 				}
@@ -58,7 +66,7 @@ const App = () => {
 			}
 			if (targetNode) handleMoveSelect(targetNode);
 		},
-		[currentNode, moveTree, handleMoveSelect]
+		[currentNode, moveTrees, treeIdx, handleMoveSelect]
 	);
 
 	return (
@@ -76,7 +84,7 @@ const App = () => {
 					setDragged={setDragged}
 					theme={theme}
 					setTheme={setTheme}
-					moveTree={moveTree}
+					moveTree={moveTrees[treeIdx]}
 					currentNode={currentNode}
 					onMoveSelect={handleMoveSelect}
 					flipped={flipped}
@@ -86,7 +94,9 @@ const App = () => {
 			<div className="h-screen md:h-screen w-full md:w-1/3 flex flex-col items-center inset-shadow-panel md:mt-0 overflow-scroll p-8">
 				<MoveTree
 					key={treeKey}
-					moveTree={moveTree}
+					moveTrees={moveTrees}
+					treeIdx={treeIdx}
+					changeTreeIdx={changeTreeIdx}
 					currentNode={currentNode}
 					onMoveSelect={handleMoveSelect}
 					onNavigate={handleTreeNavigate}
